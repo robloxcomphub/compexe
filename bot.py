@@ -1,3 +1,9 @@
+import sys
+import types
+
+sys.modules['discord.voice_client'] = types.ModuleType('voice_client')
+sys.modules['discord.player'] = types.ModuleType('player')
+
 import discord
 from discord import app_commands
 import asyncio
@@ -11,7 +17,6 @@ class MyClient(discord.Client):
         self.tree = app_commands.CommandTree(self)
 
     async def setup_hook(self):
-        # Global sync for instant availability
         await self.tree.sync()
         print("✅ Commands synced globally and ready.")
 
@@ -21,7 +26,7 @@ client = MyClient()
 @app_commands.describe(text="The text to repeat")
 async def say(interaction: discord.Interaction, text: str):
     await interaction.response.send_message("Starting to send your message...", ephemeral=True)
-    for i in range(60):
+    for _ in range(60):
         await interaction.channel.send(text)
         await asyncio.sleep(1)
 
