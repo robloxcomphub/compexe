@@ -1,15 +1,26 @@
 import sys
 import types
 
-# Mock discord.voice_client module with required classes to avoid import errors
+# Create a dummy VoiceClient class with required class attributes
+class DummyVoiceClient:
+    warn_nacl = False
+    warn_ffmpeg = False
+    # Add any other expected class attributes if needed
+
+# Create a dummy VoiceProtocol class (empty)
+class DummyVoiceProtocol:
+    pass
+
+# Mock discord.voice_client module with these classes
 voice_client = types.ModuleType('voice_client')
-setattr(voice_client, 'VoiceClient', object)     # dummy placeholder class
-setattr(voice_client, 'VoiceProtocol', object)   # dummy placeholder class
+voice_client.VoiceClient = DummyVoiceClient
+voice_client.VoiceProtocol = DummyVoiceProtocol
 sys.modules['discord.voice_client'] = voice_client
 
-# Mock discord.player module as empty to bypass voice imports
+# Mock discord.player module as empty (discord.py imports it but doesn't access members here)
 player = types.ModuleType('player')
 sys.modules['discord.player'] = player
+
 
 import discord
 from discord import app_commands
