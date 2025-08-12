@@ -1,8 +1,15 @@
 import sys
 import types
 
-sys.modules['discord.voice_client'] = types.ModuleType('voice_client')
-sys.modules['discord.player'] = types.ModuleType('player')
+# Mock discord.voice_client module with required classes to avoid import errors
+voice_client = types.ModuleType('voice_client')
+setattr(voice_client, 'VoiceClient', object)     # dummy placeholder class
+setattr(voice_client, 'VoiceProtocol', object)   # dummy placeholder class
+sys.modules['discord.voice_client'] = voice_client
+
+# Mock discord.player module as empty to bypass voice imports
+player = types.ModuleType('player')
+sys.modules['discord.player'] = player
 
 import discord
 from discord import app_commands
